@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#000000">
+    <title>Booyah League | SYSTEM OVERRIDE V4 | OMEGA CLASS</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 
+                        p: '#ff003c', 
+                        bg: '#000000', 
+                        card: '#0a0a0a',
+                        cyber: '#00f3ff',
+                        gold: '#ffd700',
+                        void: '#050505',
+                        toxic: '#39ff14'
+                    },
+                    animation: { 
+                        'pulse-fast': 'pulse 0.5s cubic-bezier(0.4, 0, 0.6, 1) infinite', 
+                        'glitch': 'glitch 0.8s cubic-bezier(.25, .46, .45, .94) both infinite',
+                        'scan': 'scan 4s linear infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'hologram': 'hologram 2s ease-in-out infinite alternate',
+                        'spin-slow': 'spin 10s linear infinite',
+                        'ping-slow': 'ping 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+                        'matrix': 'matrix 20s linear infinite'
+                    },
+                    keyframes: {
+                        glitch: {
+                            '0%': { transform: 'translate(0)' },
+                            '20%': { transform: 'translate(-2px, 2px)' },
+                            '40%': { transform: 'translate(-2px, -2px)' },
+                            '60%': { transform: 'translate(2px, 2px)' },
+                            '80%': { transform: 'translate(2px, -2px)' },
+                            '100%': { transform: 'translate(0)' }
+                        },
+                        scan: {
+                            '0%': { backgroundPosition: '0% 0%' },
+                            '100%': { backgroundPosition: '0% 100%' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        hologram: {
+                            '0%': { opacity: 0.8, textShadow: '0 0 10px rgba(0,243,255,0.5)' },
+                            '100%': { opacity: 0.4, textShadow: '0 0 20px rgba(0,243,255,0.8)' }
+                        },
+                        matrix: {
+                            '0%': { backgroundPosition: '0% 0%' },
+                            '100%': { backgroundPosition: '0% 1000%' }
+                        }
+                    },
+                    backgroundImage: {
+                        'hex-pattern': "url('data:image/svg+xml,%3Csvg width=\"24\" height=\"40\" viewBox=\"0 0 24 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cpath d=\"M0 40c5.523 0 10-4.477 10-10V10c0-5.523-4.477-10-10-10s-10 4.477-10 10v20c0 5.523 4.477 10 10 10z\" fill=\"%23111\" fill-opacity=\"0.1\" fill-rule=\"evenodd\"/%3E%3C/svg%3E')",
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* * Booyah League V4 OMEGA STYLESHEET 
+         * ENHANCED VISUALS & DATA DENSITY
+         */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Koulen&display=swap');
+        
+        body { 
+            background-color: #000; 
+            color: #fff; 
+            font-family: 'Rajdhani', sans-serif; 
+            overflow-x: hidden; 
+            user-select: none; 
+            background-image: 
+                radial-gradient(circle at 50% 50%, #111 0%, #000 100%),
+                repeating-linear-gradient(0deg, transparent, transparent 1px, #ff003c05 1px, #ff003c05 2px);
+        }
+        
+        .font-game { font-family: 'Orbitron', sans-serif; }
+        .font-mono-tech { font-family: 'Share Tech Mono', monospace; }
+        .font-header { font-family: 'Koulen', cursive; }
+        
+        /* CUSTOM SCROLLBAR - TITAN STYLE */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #050505; border-left: 1px solid #111; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #b9002d, #ff003c); border-radius: 2px; }
+
+        /* GLASSMORPHISM & BORDERS */
+        .glass { 
+            background: rgba(10, 10, 10, 0.9); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            backdrop-blur: 15px; 
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,0,60,0.5), transparent);
+        }
+
+        .glass-panel { 
+            background: linear-gradient(160deg, #111, #050505); 
+            border: 1px solid #222; 
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        .glass-holo {
+            background: rgba(0, 243, 255, 0.03);
+            border: 1px solid rgba(0, 243, 255, 0.1);
+            backdrop-blur: 5px;
+        }
+
+        /* INPUTS & BUTTONS - TITAN CLASS */
+        .input-titan { 
+            background: #080808; 
+            border: 1px solid #333; 
+            padding: 18px; 
+            border-radius: 4px; 
+            width: 100%; 
+            color: #00f3ff; 
+            outline: none; 
+            transition: 0.4s; 
+            font-family: 'Share Tech Mono'; 
+            font-size: 14px;
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+        }
+        .input-titan:focus { 
+            border-color: #ff003c; 
+            background: #110505;
+            box-shadow: 0 0 20px rgba(255,0,60,0.2), inset 0 0 10px rgba(255,0,60,0.1); 
+        }
+
+        .btn-titan { 
+            background: linear-gradient(90deg, #b9002d, #ff003c); 
+            position: relative; 
+            color: white; 
+            font-weight: 900; 
+            padding: 18px; 
+            width: 100%; 
+            text-transform: uppercase; 
+            border: none; 
+            cursor: pointer; 
+            font-family: 'Orbitron'; 
+            letter-spacing: 3px; 
+            transition: 0.3s; 
+            clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        .btn-titan:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 0 30px rgba(255,0,60,0.6); 
+            letter-spacing: 4px;
+        }
+        .btn-titan:active { transform: scale(0.98); }
+        .btn-titan:disabled { background: #333; cursor: not-allowed; box-shadow: none; transform: none; color: #777; }
+
+        /* RANK BADGES SYSTEM (50+ RANKS SUPPORT) */
+        .rank-tag {
+            font-size: 9px;
+            padding: 3px 8px;
+            border-radius: 2px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Orbitron';
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .rank-iron { background: #333; color: #aaa; border-color: #555; }
+        .rank-bronze { background: #5c4033; color: #cd7f32; border-color: #8b4513; }
+        .rank-silver { background: #718096; color: #fff; border-color: #a0aec0; box-shadow: 0 0 5px white; }
+        .rank-gold { background: linear-gradient(45deg, #b8860b, #ffd700); color: #000; box-shadow: 0 0 10px #ffd700; }
+        .rank-plat { background: linear-gradient(45deg, #00ced1, #00ffff); color: #000; box-shadow: 0 0 10px #00ffff; }
+        .rank-dia { background: linear-gradient(45deg, #8a2be2, #ff00ff); color: #fff; box-shadow: 0 0 15px #ff00ff; }
+        .rank-god { background: linear-gradient(90deg, #ff0000, #ff003c); color: white; animation: pulse-fast 1s infinite; box-shadow: 0 0 25px #ff003c; }
+
+        /* NOTIFICATIONS */
+        #toast-container { position: fixed; top: 10%; left: 50%; transform: translateX(-50%); z-index: 99999; width: 90%; max-width: 350px; pointer-events: none; }
+        .toast { 
+            background: rgba(0,0,0,0.95); 
+            border: 1px solid; 
+            color: #fff; 
+            padding: 15px; 
+            margin-bottom: 10px;
+            font-family: 'Share Tech Mono'; 
+            font-size: 12px; 
+            text-transform: uppercase; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8); 
+            animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+            pointer-events: auto; 
+            display: flex; 
+            align-items: center; 
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+        @keyframes slideInToast { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* CANVAS BG */
+        #cyber-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; opacity: 0.4; }
+        .scanline-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.2)); background-size: 100% 3px; z-index: -1; pointer-events: none; }
+        
+        /* NAVIGATION */
+        .nav-bar { 
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
+            width: 95%; max-width: 450px; height: 75px; 
+            display: flex; justify-content: space-around;
+            background: rgba(5, 5, 5, 0.95); 
+            border: 1px solid #333; 
+            border-top: 2px solid #ff003c;
+            border-radius: 20px 20px 30px 30px; 
+            z-index: 999; 
+            backdrop-blur: 20px; 
+            box-shadow: 0 0 40px rgba(0,0,0,0.8); 
+            padding: 0 10px;
+        }
+        .nav-item { 
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            color: #555; transition: 0.4s; cursor: pointer; position: relative;
+        }
+        .nav-active { color: #ff003c; transform: translateY(-8px); text-shadow: 0 0 15px #ff003c; }
+        .nav-active i { font-size: 24px; animation: float 3s infinite; }
+        
+        .avatar { width: 45px; height: 45px; border-radius: 8px; border: 2px solid #333; transition: 0.3s; }
+        .hidden { display: none !important; }
+        .blink { animation: pulse 1s infinite; }
+
+        /* MARQUEE */
+        .marquee-wrap { border-top: 1px solid #ff003c; border-bottom: 1px solid #ff003c; background: #000; padding: 5px 0; overflow: hidden; white-space: nowrap; position: relative; }
+        .marquee-text { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; font-family: 'Orbitron'; font-size: 11px; color: #ff003c; text-shadow: 0 0 5px #ff003c; }
+        @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+
+        /* FADE */
+        .fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); filter: blur(5px); } to { opacity: 1; transform: scale(1); filter: blur(0); } }
+
+        /* STORE ITEMS */
+        .store-card {
+            background: linear-gradient(180deg, rgba(20,20,20,0.9), rgba(5,5,5,0.95));
+            border: 1px solid #222;
+            transition: 0.3s;
+        }
+        .store-card:hover {
+            border-color: #00f3ff;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        .rarity-common { border-bottom: 3px solid #777; }
+        .rarity-rare { border-bottom: 3px solid #00f3ff; }
+        .rarity-epic { border-bottom: 3px solid #b200ff; }
+        .rarity-legendary { border-bottom: 3px solid #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.1); }
+    </style>
+
+<style>
+/* ===== UI POLISH (NO LOGIC TOUCHED) ===== */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: radial-gradient(circle at top, #0f172a, #000000 70%);
+}
+
+h1,h2,h3,.brand-title {
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.08em;
+}
+
+.glass {
+    backdrop-filter: blur(14px);
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 0 25px rgba(0,255,255,0.08);
+}
+
+button {
+    transition: all .25s ease;
+}
+
+button:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 0 18px rgba(0,255,255,.4);
+}
+
+input,select {
+    background: rgba(0,0,0,.55) !important;
+    border-color: rgba(0,255,255,.3) !important;
+}
+/* ===== END UI POLISH ===== */
+</style>
+
+</head>
+<body>
+
+    <canvas id="cyber-canvas"></canvas>
+    <div class="scanline-overlay"></div>
+    <div id="toast-container"></div>
+
+    <script>
+        // *** Booyah League AUDIO CORE V4 (HIGH FIDELITY) ***
+        const AUDIO_CORE = {
+            click: "data:audio/wav;base64,UklGRi4AAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=", 
+            hover: "data:audio/wav;base64,UklGRi4AAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=",
+            success: "data:audio/wav;base64,UklGRi4AAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=",
+            error: "data:audio/wav;base64,UklGRi4AAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA="
+        };
+        
+        const SECURITY_CHECKSUM = "X9F_".repeat(5000); 
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let MUTE = false;
+
+        function playSfx(type) {
+            if(MUTE || audioCtx.state === 'suspended') {
+                if(audioCtx.state === 'suspended') audioCtx.resume();
+                if(MUTE) return;
+            }
+            if(navigator.vibrate) navigator.vibrate(type === 'error' ? [50,50,50] : 15);
+
+            const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            const filter = audioCtx.createBiquadFilter();
+            
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            if(type === 'click') {
+                osc.type = 'triangle'; 
+                osc.frequency.setValueAtTime(1200, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.1);
+                osc.start(); osc.stop(now + 0.1);
+            } else if(type === 'success') {
+                osc.type = 'square'; 
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.linearRampToValueAtTime(880, now + 0.1);
+                filter.type = "lowpass";
+                filter.frequency.setValueAtTime(1000, now);
+                filter.frequency.linearRampToValueAtTime(5000, now + 0.2);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.4);
+                osc.start(); osc.stop(now + 0.4);
+            } else if(type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(100, now);
+                osc.frequency.linearRampToValueAtTime(50, now + 0.3);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.3);
+                osc.start(); osc.stop(now + 0.3);
+            } else if(type === 'coin') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(1800, now);
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.6);
+                osc.start(); osc.stop(now + 0.6);
+            } else if(type === 'hover') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(200, now);
+                gain.gain.setValueAtTime(0.02, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.05);
+                osc.start(); osc.stop(now + 0.05);
+            } else if(type === 'buy') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.3);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.3);
+                osc.start(); osc.stop(now + 0.3);
+            }
+        }
+    </script>
+
+    <div class="max-w-md mx-auto min-h-screen relative overflow-hidden bg-black/50 shadow-[0_0_100px_rgba(0,0,0,1)]">
+        
+        <section id="auth-layer" class="min-h-screen flex flex-col justify-center items-center p-6 relative z-10">
+            <div class="text-center mb-12 relative group">
+                <div class="absolute inset-0 bg-red-600 blur-[100px] opacity-20 rounded-full animate-pulse"></div>
+                <div class="relative z-10">
+                    <h1 class="font-game text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-300 to-gray-600 animate-glitch" style="text-shadow: 0 0 20px rgba(255,0,60,0.8);">Booyah League</h1>
+                    <h2 class="text-3xl font-game text-red-600 -mt-2 tracking-tighter">GOLIATH</h2>
+                    <div class="h-1 w-24 bg-red-600 mx-auto mt-4 shadow-[0_0_10px_#ff003c]"></div>
+                    <p class="text-[9px] text-gray-500 font-mono mt-3 tracking-[0.5em] uppercase">System Override V4.0 (Omega)</p>
+                </div>
+            </div>
+            
+            <div class="glass w-full p-8 rounded-[4px] border border-white/10 relative overflow-hidden backdrop-blur-xl">
+                <div class="absolute top-0 left-0 w-2 h-2 border-t border-l border-red-500"></div>
+                <div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-red-500"></div>
+                <div class="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-red-500"></div>
+                <div class="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-red-500"></div>
+
+                <div id="reg-box" class="hidden space-y-5 mb-5 fade-in">
+                    <label class="text-[9px] text-gray-500 uppercase font-bold ml-1">Agent Codename</label>
+                    <input id="u-name" placeholder="ENTER IN GAME NAME" class="input-titan" oninput="playSfx('click')">
+                </div>
+                <div class="space-y-5">
+                    <div>
+                        <label class="text-[9px] text-gray-500 uppercase font-bold ml-1">Access ID</label>
+                        <input id="u-email" type="email" placeholder="EMAIL ADDRESS" class="input-titan" oninput="playSfx('click')">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-gray-500 uppercase font-bold ml-1">Security Key</label>
+                        <input id="u-pass" type="password" placeholder="PASSWORD" class="input-titan" oninput="playSfx('click')">
+                    </div>
+                    <button onclick="processAuth()" class="btn-titan mt-6">
+                        <i class="fa fa-fingerprint mr-2"></i> INITIALIZE LINK
+                    </button>
+                </div>
+                <div class="mt-8 text-center">
+                    <p onclick="toggleAuth()" id="auth-toggle" class="text-[10px] text-gray-400 font-bold cursor-pointer uppercase tracking-widest hover:text-red-500 transition-colors border-b border-transparent hover:border-red-500 inline-block pb-1">>> Request New Identity <<</p>
+                </div>
+            </div>
+            <p class="text-center text-[7px] text-gray-700 mt-8 font-mono-tech w-full opacity-50">
+                SECURE CONNECTION ESTABLISHED // ENCRYPTION: AES-256-GCM<br>
+                SERVER: FIREBASE-CLUSTER-01 // LATENCY: 2ms // INTEGRITY: 100%
+            </p>
+        </section>
+
+        <section id="app-layer" class="hidden min-h-screen pb-32 relative z-10 fade-in">
+            <div class="marquee-wrap">
+                <div class="marquee-text" id="news-ticker">
+                    ⚠ SYSTEM ALERT: BLACK MARKET UPDATE - NEW SKINS AVAILABLE // TOURNAMENT REGISTRATIONS OPEN // TOP PLAYER: AGENT ZEUS [RANK: CYBER GOD] // DAILY REWARDS RESET // CHEATERS WILL BE BANNED // JOIN DISCORD FOR SCRIMS ⚠
+                </div>
+            </div>
+
+            <header class="p-6 flex justify-between items-end glass sticky top-0 z-[50] rounded-b-[20px] mx-2 mt-2 border-t-0">
+                <div class="flex items-center gap-4">
+                    <div class="relative group cursor-pointer" onclick="nav('profile')">
+                        <img id="head-avatar" src="" class="avatar bg-black/50 group-hover:border-red-500">
+                        <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-black rounded-full animate-pulse shadow-[0_0_10px_#00ff00]"></div>
+                        <div class="absolute inset-0 bg-red-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition"></div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 id="head-nick" class="font-game text-sm text-white uppercase tracking-widest shadow-black drop-shadow-md">AGENT</h2>
+                        </div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span id="rank-badge" class="rank-tag rank-iron">TRAINEE</span>
+                            <span class="text-[8px] text-gray-500 font-mono-tech">LVL <span id="lvl-calc">1</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div onclick="nav('wallet')" class="bg-gradient-to-r from-gray-900 to-black hover:from-red-900/50 hover:to-black transition-all px-4 py-2 rounded border border-white/10 cursor-pointer group">
+                    <p class="text-[7px] text-gray-400 uppercase tracking-widest group-hover:text-red-400 font-bold mb-1">Vault Balance</p>
+                    <div class="flex items-center justify-end gap-1">
+                        <span class="text-red-600 font-bold text-lg drop-shadow-[0_0_5px_rgba(255,0,0,0.8)]">₹</span>
+                        <span id="bal-hud" class="font-game text-xl tracking-wide">0</span>
+                    </div>
+                </div>
+            </header>
+
+            <main class="p-4 mt-2 space-y-6">
+                <div id="pg-home" class="page-content animate-fade space-y-6">
+                    <div id="daily-reward-box" class="glass p-5 rounded-lg border-l-4 border-yellow-500 bg-gradient-to-r from-yellow-900/10 to-transparent flex justify-between items-center relative overflow-hidden group">
+                        <div class="absolute right-0 top-0 w-20 h-20 bg-yellow-500 blur-[50px] opacity-10 group-hover:opacity-20 transition"></div>
+                        <div>
+                            <h4 class="font-game text-yellow-500 text-sm flex items-center gap-2"><i class="fa fa-box-open"></i> SUPPLY DROP</h4>
+                            <p class="text-[9px] text-gray-400 mt-1 font-mono">Resupplies available every 24h.</p>
+                        </div>
+                        <button onclick="claimDaily()" id="btn-daily" class="bg-yellow-600/20 hover:bg-yellow-500 hover:text-black border border-yellow-600 text-yellow-500 font-bold px-5 py-2 rounded text-[10px] font-game transition-all uppercase tracking-wider">
+                            Claim ₹10
+                        </button>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-[20px] border border-gray-800">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-game text-[10px] text-gray-400 uppercase tracking-[0.2em]"><i class="fa fa-trophy text-red-600 mr-2"></i>Elite Agents</h4>
+                            <span class="text-[8px] text-red-500 animate-pulse">● LIVE UPDATE</span>
+                        </div>
+                        <div id="leaderboard-list" class="space-y-2"></div>
+                    </div>
+
+                    <div class="flex justify-between items-center px-1 mt-6 border-b border-gray-800 pb-2">
+                        <h3 class="font-game text-lg italic text-white flex items-center gap-2">
+                            <span class="w-1 h-6 bg-red-600 block"></span>
+                            ACTIVE OPS
+                        </h3>
+                        <div class="flex gap-2 text-[9px]">
+                            <span class="bg-gray-800 px-2 py-1 rounded text-gray-400">BGMI</span>
+                            <span class="bg-gray-800 px-2 py-1 rounded text-gray-400">CS2</span>
+                            <span class="bg-red-900/50 text-red-500 px-2 py-1 rounded border border-red-500/30">ALL</span>
+                        </div>
+                    </div>
+
+                    <div id="list-matches" class="space-y-6"></div>
+                </div>
+
+                <div id="pg-wallet" class="page-content hidden animate-fade space-y-6">
+                    <div class="glass p-8 rounded-[30px] text-center relative overflow-hidden border-t-2 border-red-600">
+                        <div class="absolute -top-20 -left-20 w-40 h-40 bg-red-600 blur-[80px] opacity-20 animate-pulse"></div>
+                        <div class="absolute -bottom-20 -right-20 w-40 h-40 bg-blue-600 blur-[80px] opacity-20"></div>
+                        
+                        <p class="text-[8px] text-gray-500 uppercase font-game mb-2 tracking-[0.3em]">Total Assets</p>
+                        <h2 class="text-7xl font-black font-game text-white tracking-tighter drop-shadow-2xl flex justify-center items-start">
+                            <span class="text-2xl mt-2 text-gray-500 mr-1">₹</span><span id="bal-main">0</span>
+                        </h2>
+                        
+                        <div class="grid grid-cols-2 gap-4 mt-8">
+                            <button onclick="openTab('dep')" class="bg-white text-black py-4 rounded-xl text-[10px] font-black uppercase hover:scale-95 transition-transform shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                                <i class="fa fa-arrow-down mr-2"></i> Add Funds
+                            </button>
+                            <button onclick="openTab('wit')" class="bg-red-600 text-white py-4 rounded-xl text-[10px] font-black uppercase hover:scale-95 transition-transform shadow-[0_0_20px_rgba(255,0,60,0.4)]">
+                                <i class="fa fa-arrow-up mr-2"></i> Cashout
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="box-dep" class="glass p-6 rounded-[20px] space-y-4 border-t-4 border-green-500 relative">
+                        <div class="absolute top-2 right-2 text-green-500 text-[10px] animate-pulse">SECURE GATEWAY</div>
+                        <h3 class="font-game text-lg uppercase flex items-center gap-2"><i class="fa fa-qrcode text-green-500"></i> Deposit</h3>
+                        
+                        <div class="bg-white p-4 rounded-xl text-center shadow-inner">
+                            <a href="https://ibb.co/dsyMF4ZB"><img src="https://i.ibb.co/LDfRmdKS/1000206327.png" alt="1000206327" border="0" class="mx-auto w-32 mb-2 mix-blend-multiply"></a>
+                            <p class="text-[8px] text-black font-bold tracking-widest">SCAN TO INITIATE</p>
+                        </div>
+                        
+                        <p class="text-[10px] text-center bg-black/60 p-3 rounded font-mono text-green-400 select-all border border-green-500/20 cursor-pointer hover:bg-green-900/20 transition" onclick="copyUPI()">
+                            karnngrewal@okicici <i class="fa fa-copy ml-2"></i>
+                        </p>
+                        
+                        <div class="grid grid-cols-2 gap-2">
+                            <input id="dep-amt" type="number" placeholder="AMOUNT ₹" class="input-titan">
+                            <input id="dep-utr" placeholder="12-DIGIT UTR" class="input-titan">
+                        </div>
+                        <button onclick="reqDep()" class="btn-titan" style="background: linear-gradient(90deg, #10b981, #059669);">VERIFY & ADD</button>
+                    </div>
+
+                    <div id="box-wit" class="hidden glass p-6 rounded-[20px] space-y-4 border-t-4 border-red-500">
+                         <h3 class="font-game text-lg uppercase flex items-center gap-2"><i class="fa fa-university text-red-500"></i> Withdraw</h3>
+                        <input id="wit-amt" type="number" placeholder="AMOUNT (MIN ₹30)" class="input-titan">
+                        <input id="wit-upi" placeholder="YOUR UPI ID" class="input-titan">
+                        <button onclick="reqWit()" class="btn-titan">REQUEST CASHOUT</button>
+                        <p class="text-[8px] text-gray-500 text-center">Processing time: 10-30 Minutes.</p>
+                    </div>
+
+                    <div class="glass-panel p-5 rounded-[20px]">
+                        <h4 class="font-game text-[10px] text-gray-500 mb-4 px-1 uppercase tracking-widest border-b border-gray-800 pb-2">Transaction Logs</h4>
+                        <div id="tx-history" class="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scroll"></div>
+                    </div>
+                </div>
+
+                <div id="pg-store" class="page-content hidden animate-fade space-y-6 pb-20">
+                    <div class="glass p-5 rounded-[20px] text-center bg-[url('https://media.giphy.com/media/U3qYN8S0j3bpK/giphy.gif')] bg-cover bg-center relative group">
+                        <div class="absolute inset-0 bg-black/80"></div>
+                        <div class="relative z-10">
+                            <h2 class="font-game text-3xl text-cyber animate-glitch">BLACK MARKET</h2>
+                            <p class="text-[9px] text-gray-400 font-mono tracking-widest mt-1">ILLEGAL HARDWARE & SKINS</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-2 overflow-x-auto pb-2">
+                        <button class="bg-red-600 text-white px-4 py-1 rounded text-[9px] font-bold font-game whitespace-nowrap">FEATURED</button>
+                        <button class="bg-gray-800 text-gray-400 px-4 py-1 rounded text-[9px] font-bold font-game whitespace-nowrap">WEAPONS</button>
+                        <button class="bg-gray-800 text-gray-400 px-4 py-1 rounded text-[9px] font-bold font-game whitespace-nowrap">AVATARS</button>
+                    </div>
+
+                    <div id="store-grid" class="grid grid-cols-2 gap-3">
+                        </div>
+                </div>
+
+                <div id="pg-profile" class="page-content hidden animate-fade space-y-6">
+                    <div class="relative pt-10 text-center">
+                        <div class="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-red-900/20 to-transparent z-0"></div>
+                        <div class="relative z-10 inline-block group">
+                             <img id="prof-avatar" src="" class="w-28 h-28 rounded-2xl border-2 border-red-600 shadow-[0_0_50px_rgba(255,0,60,0.4)] bg-black">
+                             <div class="absolute bottom-0 right-0 bg-black border border-red-500 text-red-500 text-[8px] px-2 py-1 font-bold rounded">V4</div>
+                        </div>
+                        <h2 id="prof-nick" class="font-game text-3xl mt-4 uppercase tracking-tighter"></h2>
+                        <p id="prof-email" class="text-[10px] text-gray-500 font-mono tracking-widest uppercase"></p>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="glass p-3 rounded text-center border-t border-red-500/50">
+                            <p class="text-[7px] text-gray-400 font-mono mb-1">MATCHES</p>
+                            <h3 id="stat-joined" class="font-game text-xl">0</h3>
+                        </div>
+                        <div class="glass p-3 rounded text-center border-t border-blue-500/50">
+                            <p class="text-[7px] text-gray-400 font-mono mb-1">WIN RATE</p>
+                            <h3 id="stat-wr" class="font-game text-xl text-blue-400">N/A</h3>
+                        </div>
+                        <div class="glass p-3 rounded text-center border-t border-yellow-500/50">
+                            <p class="text-[7px] text-gray-400 font-mono mb-1">KD RATIO</p>
+                            <h3 id="stat-kd" class="font-game text-xl text-yellow-500">0.0</h3>
+                        </div>
+                    </div>
+
+                    <div class="glass p-5 rounded-[20px] border border-gray-800">
+                        <div class="flex items-center gap-2 mb-4 border-b border-white/5 pb-2">
+                            <i class="fa fa-suitcase text-cyber"></i>
+                            <h3 class="font-game text-xs text-white uppercase tracking-widest">Armory / Inventory</h3>
+                        </div>
+                        <div id="my-inventory" class="grid grid-cols-4 gap-2">
+                            </div>
+                    </div>
+                    
+                    <div class="glass p-5 rounded-[20px] border border-red-900/30">
+                        <div class="flex items-center gap-2 mb-4 border-b border-white/5 pb-2">
+                            <i class="fa fa-crosshairs text-red-500 animate-pulse"></i>
+                            <h3 class="font-game text-xs text-white uppercase tracking-widest">Active Deployments</h3>
+                        </div>
+                        <div id="my-deployments" class="space-y-3 max-h-60 overflow-y-auto"></div>
+                    </div>
+
+                    <div class="glass p-6 rounded-[20px] space-y-4">
+                        <h3 class="font-game text-xs text-gray-500 mb-2 uppercase tracking-widest">System Preferences</h3>
+                        
+                        <div class="flex justify-between items-center p-2 hover:bg-white/5 rounded transition">
+                            <span class="text-xs text-gray-300 font-mono">AUDIO FEEDBACK</span>
+                            <button onclick="toggleSound()" id="btn-sound" class="bg-red-600 text-white px-3 py-1 rounded text-[9px] font-bold shadow-[0_0_10px_rgba(255,0,60,0.5)]">ENGAGED</button>
+                        </div>
+                         <div class="flex justify-between items-center p-2 hover:bg-white/5 rounded transition">
+                            <span class="text-xs text-gray-300 font-mono">LOW GRAPHICS</span>
+                            <button class="bg-gray-800 text-gray-400 px-3 py-1 rounded text-[9px] font-bold">DISABLED</button>
+                        </div>
+                    </div>
+
+                    <div class="glass p-6 rounded-[20px]">
+                        <h3 class="font-game text-xs text-gray-500 mb-4 uppercase tracking-widest">Identity Alteration</h3>
+                        <div class="grid grid-cols-4 gap-3 max-h-48 overflow-y-auto custom-scroll p-1">
+                            <script>
+                                // *** MASSIVE AVATAR LIST (CUSTOM CHARACTER UPGRADE) ***
+                                const AVATAR_SEEDS = [
+                                    'Felix','Aneka','Zack','Willow','Bear','Ryker','Midnight','Cyber','Raven','Ghost',
+                                    'Viper','Titan','Blaze','Frost','Neon','Shadow','Rogue','Storm','Matrix','Vector',
+                                    'Pixel','Sonic','Tails','Knuckles','Mario','Luigi','Link','Zelda','Samus','Snake',
+                                    'Cloud','Kratos','Atreus','Joel','Ellie','Geralt','Ciri','Yennefer','Triss','V',
+                                    'Johnny','Arthas','Illidan','Thrall','Sylvanas','Jaina','Anduin','Tyrande','Malfurion',
+                                    'Dante','Vergil','Nero','Leon','Claire','Jill','Chris','Ada','Wesker','Nemesis'
+                                ];
+                                AVATAR_SEEDS.forEach(seed => {
+                                    document.write(`<img onclick="setAvatar('${seed}')" src="https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}" class="w-full bg-black/50 rounded-lg cursor-pointer hover:scale-110 border-2 border-transparent hover:border-red-500 transition-all mb-1">`)
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    
+                    <button onclick="logout()" class="w-full glass p-4 rounded text-red-500 font-game text-[10px] uppercase hover:bg-red-900/20 transition border border-red-900/30">
+                        <i class="fa fa-power-off mr-2"></i> Terminate Session
+                    </button>
+                </div>
+
+                <div id="pg-admin" class="page-content hidden space-y-8 pb-32 animate-fade">
+                    <div class="glass p-6 rounded-[30px] border-l-4 border-purple-500 bg-gradient-to-br from-purple-900/20 to-transparent relative overflow-hidden">
+                        <div class="absolute -right-10 -top-10 w-32 h-32 bg-purple-500 blur-[60px] opacity-20"></div>
+                        <h3 class="font-game text-xs text-purple-400 mb-4 uppercase tracking-widest flex items-center gap-2"><i class="fa fa-fingerprint"></i> GOD MODE CONTROLS</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-black/60 p-4 rounded-xl text-center border border-white/5">
+                                <p class="text-[8px] text-gray-500 font-mono">TOTAL AGENTS</p>
+                                <h4 id="adm-stat-u" class="text-2xl font-bold font-game">0</h4>
+                            </div>
+                            <div class="bg-black/60 p-4 rounded-xl text-center border border-white/5">
+                                <p class="text-[8px] text-gray-500 font-mono">PENDING TX</p>
+                                <h4 id="adm-stat-d" class="text-2xl font-bold font-game text-yellow-500">0</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="panel-reward" class="glass p-6 rounded-[20px] border-t border-green-500">
+                        <h3 class="font-game text-xs text-green-500 mb-4 uppercase tracking-widest">Reward Dispatcher</h3>
+                        <div class="flex gap-2 mb-2">
+                            <input id="dist-name" placeholder="AGENT NAME / IGN" class="input-titan">
+                            <input id="dist-amt" type="number" placeholder="₹" class="input-titan w-24">
+                        </div>
+                        <button onclick="distributePrize()" class="btn-titan text-[10px]" style="background: linear-gradient(90deg, #10b981, #059669);">DISPATCH CREDITS</button>
+                    </div>
+
+                    <div class="glass p-6 rounded-[20px] border-t border-red-600">
+                        <h3 class="font-game text-xs text-red-500 mb-4 uppercase tracking-widest">Initialize Operation</h3>
+                        <input id="adm-n" placeholder="MISSION TITLE (e.g., ERANGEL SQUAD)" class="input-titan mb-3">
+                        <div class="flex gap-2 mb-3">
+                            <input id="adm-t" type="time" class="input-titan">
+                            <input id="adm-f" type="number" placeholder="FEE" class="input-titan">
+                        </div>
+                        <div class="flex gap-2 mb-4">
+                            <input id="adm-w" type="number" placeholder="WIN POOL" class="input-titan">
+                            <input id="adm-k" type="number" placeholder="KILL POOL" class="input-titan">
+                            <input id="adm-s" type="number" placeholder="SLOTS" class="input-titan">
+                        </div>
+                        <button onclick="createM()" class="btn-titan">DEPLOY MISSION</button>
+                    </div>
+
+                    <div id="panel-finance">
+                        <h4 class="font-game text-[9px] text-yellow-500 mb-4 px-2 uppercase tracking-[0.2em] blink">>> Financial Requests <<</h4>
+                        <div id="adm-fin-feed" class="space-y-3"></div>
+                    </div>
+                    <div>
+                        <h4 class="font-game text-[9px] text-blue-500 mb-4 px-2 uppercase tracking-[0.2em]">>> War Room Controls <<</h4>
+                        <div id="adm-ops-feed" class="space-y-4"></div>
+                    </div>
+                </div>
+            </main>
+
+            <nav class="nav-bar">
+                <div onclick="nav('home')" id="n-home" class="nav-item nav-active">
+                    <i class="fa fa-gamepad mb-1"></i>
+                    <span class="text-[8px] font-black tracking-widest uppercase font-game">Arena</span>
+                </div>
+                <div onclick="nav('store')" id="n-store" class="nav-item">
+                     <i class="fa fa-shopping-cart mb-1"></i>
+                     <span class="text-[8px] font-black tracking-widest uppercase font-game">Store</span>
+                </div>
+                <div onclick="nav('wallet')" id="n-wallet" class="nav-item">
+                    <i class="fa fa-wallet mb-1"></i>
+                    <span class="text-[8px] font-black tracking-widest uppercase font-game">Vault</span>
+                </div>
+                <div onclick="nav('profile')" id="n-profile" class="nav-item">
+                    <i class="fa fa-user-astronaut mb-1"></i>
+                    <span class="text-[8px] font-black tracking-widest uppercase font-game">Profile</span>
+                </div>
+                <div id="n-admin-btn" onclick="nav('admin')" class="nav-item hidden text-purple-500">
+                    <i class="fa fa-fingerprint mb-1"></i>
+                    <span class="text-[8px] font-black tracking-widest uppercase font-game">God</span>
+                </div>
+            </nav>
+        </section>
+
+        <div id="modal-join" class="hidden fixed inset-0 bg-black/95 z-[99999] flex items-end sm:items-center justify-center p-0 sm:p-4 backdrop-blur-md">
+            <div class="glass w-full h-auto sm:max-w-sm rounded-t-[30px] sm:rounded-[30px] p-8 border-t-2 border-red-600 shadow-[0_-20px_60px_rgba(255,0,60,0.3)] animate-slideInToast relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent"></div>
+                <div class="w-12 h-1 bg-gray-800 rounded-full mx-auto mb-6"></div>
+                
+                <h3 class="font-game text-red-600 mb-6 text-center text-2xl italic uppercase tracking-tighter">Mission Enrollment</h3>
+                <div class="space-y-4">
+                    <div class="relative">
+                        <i class="fa fa-user absolute left-4 top-4 text-gray-500 text-xs"></i>
+                        <input id="ff-ign" placeholder="IN-GAME NAME" class="input-titan pl-10" oninput="playSfx('click')">
+                    </div>
+                    <div class="relative">
+                        <i class="fa fa-id-card absolute left-4 top-4 text-gray-500 text-xs"></i>
+                        <input id="ff-uid" type="number" placeholder="GAME CHARACTER ID" class="input-titan pl-10" oninput="playSfx('click')">
+                    </div>
+                    <div class="relative">
+                        <i class="fa fa-envelope absolute left-4 top-4 text-gray-500 text-xs"></i>
+                        <input id="ff-email" type="email" placeholder="CONFIRM EMAIL" class="input-titan pl-10" oninput="playSfx('click')">
+                    </div>
+                </div>
+                <div class="mt-8 flex gap-3">
+                    <button onclick="closeModal()" class="flex-1 bg-gray-900 border border-gray-700 text-gray-400 py-4 rounded font-bold text-[10px] uppercase hover:bg-gray-800 transition">ABORT</button>
+                    <button onclick="confirmJoin()" class="flex-[2] btn-titan shadow-[0_0_20px_rgba(255,0,60,0.4)]">CONFIRM DEPLOYMENT</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-user" class="hidden fixed inset-0 bg-black/95 z-[99999] flex items-center justify-center p-4 backdrop-blur-md">
+            <div class="glass w-full max-w-sm p-6 rounded-[20px] border border-red-500/50 relative text-center space-y-4">
+                 <i class="fa fa-times absolute top-4 right-4 text-gray-500 cursor-pointer" onclick="document.getElementById('modal-user').classList.add('hidden')"></i>
+                 <img id="insp-avatar" src="" class="w-24 h-24 rounded-full mx-auto border-2 border-red-600 shadow-[0_0_20px_rgba(255,0,60,0.3)] bg-black">
+                 <div>
+                     <h2 id="insp-nick" class="font-game text-2xl text-white"></h2>
+                     <p id="insp-email" class="text-[9px] text-gray-500 font-mono tracking-widest uppercase"></p>
+                     <div class="flex justify-center gap-2 mt-2">
+                         <span id="insp-rank" class="rank-tag"></span>
+                         <span id="insp-bal" class="text-green-500 font-mono font-bold text-sm"></span>
+                     </div>
+                 </div>
+                 
+                 <div id="adm-stat-edit" class="hidden border-t border-gray-800 pt-3 mt-3">
+                     <p class="text-[8px] text-red-500 font-bold mb-2 uppercase">Override Stats</p>
+                     <div class="grid grid-cols-2 gap-2 mb-2">
+                         <input id="adm-kd-in" placeholder="K/D (e.g 2.5)" class="input-titan py-2">
+                         <input id="adm-wr-in" placeholder="W/R (e.g 45%)" class="input-titan py-2">
+                     </div>
+                     <button onclick="saveStats()" class="bg-gray-800 text-white w-full py-2 rounded text-[9px] font-bold border border-gray-600 hover:bg-gray-700">UPDATE STATS</button>
+                 </div>
+
+                 <div id="adm-del-btn-wrap" class="hidden border-t border-gray-800 pt-4 mt-4">
+                     <button onclick="deleteTargetUser()" class="btn-titan bg-red-600 text-[10px] py-3 shadow-none hover:bg-red-700">
+                         <i class="fa fa-trash mr-2"></i> DELETE ACCOUNT
+                     </button>
+                 </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /* * Booyah League GOD MODE ENGINE V4 - OMEGA RELEASE 
+         * WITH FIREBASE REALTIME CLOUD SYNC
+         */
+
+        // *** FIREBASE CONFIGURATION ***
+        const firebaseConfig = {
+            databaseURL: "https://ff-turnament-e5fe7-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        const ADMIN_E = "ffskg86@gmail.com";
+        const STAFF_PANEL = ["1king@gmail.com", "2king@gmail.com", "3king@gmail.com"];
+        const KEY = "Booyah League_GOD_V4_OMEGA"; 
+        let USERS = [], MATCHES = [], DEPOSITS = [], WITHDRAWS = [], TX_LOGS = [], SESSION = null;
+        let ACTIVE_M_ID = null;
+        let CURRENT_INSPECT_EMAIL = null; 
+
+        /* WEAPON DATABASE */
+        const BLACK_MARKET_ITEMS = [
+            { id: 101, name: "Neon Reaver AK47", type: "skin", price: 500, rarity: "legendary", img: "fa-crosshairs", desc: "Forged in the slums of Neo-Tokyo. Increases street cred." },
+            { id: 102, name: "Cyber Tooth M416", type: "skin", price: 350, rarity: "epic", img: "fa-dragon", desc: "Bites harder than it barks. Polymer coated." },
+            { id: 103, name: "Void Walker Outfit", type: "avatar", price: 800, rarity: "legendary", img: "fa-user-secret", desc: "Become invisible to the naked eye. (Cosmetic only)." },
+            { id: 104, name: "Golden Eagle Badge", type: "badge", price: 100, rarity: "common", img: "fa-certificate", desc: "Standard issue badge for verified operatives." },
+            { id: 105, name: "Toxic Green Smoke", type: "fx", price: 200, rarity: "rare", img: "fa-cloud", desc: "Changes your lobby smoke to toxic green." },
+            { id: 106, name: "Red Data Stream", type: "fx", price: 450, rarity: "epic", img: "fa-stream", desc: "Your profile emits a red data stream effect." },
+            { id: 107, name: "Glitch Protocol", type: "tool", price: 1000, rarity: "legendary", img: "fa-microchip", desc: "Unlocks the glitched username effect." },
+            { id: 108, name: "Titan Grip Gloves", type: "skin", price: 150, rarity: "common", img: "fa-hand-rock", desc: "Better grip, less slip. Standard issue." },
+            { id: 109, name: "Phantom Operator", type: "avatar", price: 1200, rarity: "legendary", img: "fa-ghost", desc: "Silent and deadly. The ultimate stealth suit." },
+            { id: 110, name: "Kar98k Hellfire", type: "skin", price: 600, rarity: "epic", img: "fa-fire", desc: "Engraved with demonic runes. Burns on touch." },
+            { id: 111, name: "Biohazard Mask", type: "avatar", price: 300, rarity: "rare", img: "fa-head-side-mask", desc: "Filters out 99% of toxic lobby chat." },
+            { id: 112, name: "Gold Plated UZI", type: "skin", price: 450, rarity: "epic", img: "fa-bolt", desc: "Spray and pray in luxury." },
+            { id: 113, name: "Cyber Katana", type: "weapon", price: 900, rarity: "legendary", img: "fa-khanda", desc: "A blade made of pure energy." },
+            { id: 114, name: "Night Vision Goggles", type: "avatar", price: 250, rarity: "common", img: "fa-glasses", desc: "See clearly in the darkest maps." },
+            { id: 115, name: "Pulse Rifle Skin", type: "skin", price: 550, rarity: "rare", img: "fa-bullseye", desc: "Futuristic overlay for your AR." },
+            { id: 116, name: "Rogue AI Bot", type: "pet", price: 2000, rarity: "legendary", img: "fa-robot", desc: "A small companion drone (Cosmetic)." }
+        ];
+
+        /* MASSIVE RANK SYSTEM (50+ RANKS SUPPORT) */
+        const RANKS = [
+            "Trainee I", "Trainee II", "Trainee III",
+            "Recruit I", "Recruit II", "Recruit III",
+            "Soldier I", "Soldier II", "Soldier III",
+            "Corporal I", "Corporal II", "Corporal III",
+            "Sergeant I", "Sergeant II", "Sergeant III",
+            "Lieutenant I", "Lieutenant II", "Lieutenant III",
+            "Captain I", "Captain II", "Captain III",
+            "Major I", "Major II", "Major III",
+            "Colonel I", "Colonel II", "Colonel III",
+            "Brigadier I", "Brigadier II", "Brigadier III",
+            "General I", "General II", "General III",
+            "Commander I", "Commander II", "Commander III",
+            "Vanguard I", "Vanguard II", "Vanguard III",
+            "Elite I", "Elite II", "Elite III",
+            "Master I", "Master II", "Master III",
+            "Grandmaster I", "Grandmaster II", "Grandmaster III",
+            "Warlord", "Overlord", "Immortal", "Radiant", "The Singularity"
+        ];
+
+        function getRank(bal) {
+            let idx = Math.floor(bal / 100);
+            if(idx >= RANKS.length) idx = RANKS.length - 1;
+            return RANKS[idx];
+        }
+
+        /* NOTIFICATION SYSTEM */
+        function notify(msg, type='neutral') {
+            const c = document.getElementById('toast-container');
+            const d = document.createElement('div');
+            d.className = `toast ${type}`;
+            let icon = type=='success'?'fa-check-circle':(type=='error'?'fa-exclamation-triangle':'fa-info-circle');
+            let color = type=='success'?'text-green-400':(type=='error'?'text-red-500':'text-blue-400');
+            d.innerHTML = `<i class="fa ${icon} ${color} mr-3 text-lg"></i><span>${msg}</span>`;
+            d.style.borderColor = type=='success'?'#10b981':(type=='error'?'#ef4444':'#3b82f6');
+            c.appendChild(d);
+            playSfx(type);
+            setTimeout(() => { d.style.animation = 'fadeOut 0.3s forwards'; setTimeout(() => d.remove(), 300); }, 3000);
+        }
+
+        /* DATA LAYER - FIREBASE MODIFICATION */
+        
+        // Setup Realtime Listener
+        db.ref('gameData').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if(data) {
+                USERS = data.users || [];
+                MATCHES = data.matches || [];
+                DEPOSITS = data.deposits || [];
+                WITHDRAWS = data.withdraws || [];
+                TX_LOGS = data.logs || [];
+                // Update UI immediately when data changes
+                if(SESSION) sync();
+            }
+        });
+
+        function load() {
+            // Local storage is ONLY used for Session (remember me), data comes from cloud
+            SESSION = JSON.parse(localStorage.getItem(KEY+'_S')) || null;
+            // Arrays are populated by the db listener above
+        }
+
+        function save() {
+            // Saves all critical data to Firebase Cloud
+            db.ref('gameData').update({
+                users: USERS,
+                matches: MATCHES,
+                deposits: DEPOSITS,
+                withdraws: WITHDRAWS,
+                logs: TX_LOGS
+            });
+            // Keep session local so user stays logged in on this specific device
+            if(SESSION) localStorage.setItem(KEY+'_S', JSON.stringify(SESSION));
+        }
+
+        function logTx(email, desc, amt, type) {
+            TX_LOGS.unshift({ email, desc, amt, type, time: new Date().toLocaleTimeString() });
+            if(TX_LOGS.length > 200) TX_LOGS.pop();
+            save();
+        }
+
+        /* ADVANCED CANVAS VISUALS (MATRIX RAIN + PARTICLES) */
+        const canvas = document.getElementById('cyber-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        const particles = [];
+        const matrixChars = "01Booyah LeagueAZ";
+        const drops = [];
+        
+        function resize() { 
+            width = canvas.width = window.innerWidth; 
+            height = canvas.height = window.innerHeight; 
+            for(let x = 0; x < width/20; x++) drops[x] = 1;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * width; 
+                this.y = Math.random() * height; 
+                this.vx = (Math.random() - 0.5) * 0.5; 
+                this.vy = (Math.random() - 0.5) * 0.5; 
+                this.size = Math.random() * 2;
+                this.color = Math.random() > 0.9 ? '#ff003c' : '#222';
+            }
+            update() { 
+                this.x += this.vx; this.y += this.vy; 
+                if(this.x < 0 || this.x > width || this.y < 0 || this.y > height) this.reset(); 
+            }
+            draw() { 
+                ctx.fillStyle = this.color; 
+                ctx.globalAlpha = Math.random() * 0.5 + 0.2;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); 
+            }
+        }
+        for(let i=0; i<80; i++) particles.push(new Particle());
+
+        function animate() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = "#0F0"; 
+            ctx.font = "15px monospace";
+            for(let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                if(Math.random() > 0.95) ctx.fillStyle = "#ff003c";
+                else if(Math.random() > 0.95) ctx.fillStyle = "#00f3ff";
+                else ctx.fillStyle = "rgba(0, 50, 0, 0.5)"; 
+                ctx.fillText(text, i*20, drops[i]*20);
+                if(drops[i]*20 > height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+            particles.forEach(p => {
+                p.update(); p.draw();
+                particles.forEach(p2 => {
+                    const dx = p.x - p2.x, dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if(dist < 80) { 
+                        ctx.beginPath(); 
+                        ctx.strokeStyle = `rgba(255, 0, 60, ${0.1 - dist/800})`; 
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y); ctx.stroke(); 
+                    }
+                });
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        /* CORE LOGIC */
+        setInterval(() => { 
+            if(SESSION) { 
+                // No need to load() continuously as DB listener handles it
+                // Just sync UI
+                sync(); 
+                if((SESSION.email === ADMIN_E || STAFF_PANEL.includes(SESSION.email)) && !document.getElementById('pg-admin').classList.contains('hidden')) renderAdmin(); 
+            } 
+        }, 2000);
+
+        window.onload = () => {
+            // Fetch once on load just to be sure
+            db.ref('gameData').once('value').then(snapshot => {
+                const data = snapshot.val();
+                if(data) {
+                    USERS = data.users || [];
+                    MATCHES = data.matches || [];
+                    DEPOSITS = data.deposits || [];
+                    WITHDRAWS = data.withdraws || [];
+                    TX_LOGS = data.logs || [];
+                }
+                load(); // Get session
+                if(SESSION) initApp();
+                else document.getElementById('auth-layer').classList.remove('hidden');
+            });
+        };
+
+        function initApp() {
+            document.getElementById('auth-layer').classList.add('hidden');
+            document.getElementById('app-layer').classList.remove('hidden');
+            // CONNECT STAFF PANEL HERE
+            if(SESSION.email === ADMIN_E || STAFF_PANEL.includes(SESSION.email)) {
+                document.getElementById('n-admin-btn').classList.remove('hidden');
+            }
+            sync();
+            renderStore();
+            playSfx('success');
+        }
+
+        function toggleAuth() {
+            playSfx('click');
+            document.getElementById('reg-box').classList.toggle('hidden');
+            const isReg = !document.getElementById('reg-box').classList.contains('hidden');
+            document.querySelector('#auth-layer h1').innerText = isReg ? "INITIATE" : "Booyah League";
+            document.getElementById('auth-toggle').innerText = isReg ? ">> Access Existing Identity <<" : ">> Request New Identity <<";
+        }
+
+        function processAuth() {
+            load();
+            const e = document.getElementById('u-email').value.toLowerCase().trim();
+            const p = document.getElementById('u-pass').value;
+            const n = document.getElementById('u-name').value.trim();
+            const isReg = !document.getElementById('reg-box').classList.contains('hidden');
+
+            if(!e || !p) return notify("CREDENTIALS MISSING", "error");
+
+            if(e === ADMIN_E && p === "admin123") {
+                SESSION = { email: e, nick: "SYSTEM_ROOT", bal: 0, avatar: 'Felix', lastBonus: 0, matches: 0, inventory: [], kd: '10.0', winRate: '100%' };
+            } else if(isReg) {
+                // *** STRICT DUPLICATE CHECK ***
+                // Checks if user exists even with slightly different casing or spaces
+                if(USERS && USERS.some(x => x.email.toLowerCase().trim() === e)) {
+                    playSfx('error');
+                    return notify("IDENTITY EXISTS (EMAIL TAKEN)", "error");
+                }
+                
+                if(!n) return notify("CODENAME REQUIRED", "error");
+                
+                let u = { email: e, pass: p, nick: n, bal: 0, avatar: 'Felix', lastBonus: 0, matches: 0, inventory: [], kd: '0.0', winRate: '0%' };
+                USERS.push(u); SESSION = u; notify("IDENTITY CREATED", "success");
+            } else {
+                let u = USERS.find(x => x.email === e && x.pass === p);
+                if(!u) return notify("ACCESS DENIED", "error");
+                SESSION = u;
+            }
+            save(); 
+            notify("AUTHENTICATION SUCCESSFUL", "success");
+            setTimeout(() => initApp(), 500); 
+        }
+
+        function sync() {
+            // Important: refresh user data from latest global array
+            const u = USERS.find(x => x.email === SESSION.email) || SESSION;
+            
+            document.getElementById('bal-hud').innerText = u.bal;
+            document.getElementById('bal-main').innerText = u.bal;
+            document.getElementById('head-nick').innerText = u.nick;
+            document.getElementById('prof-nick').innerText = u.nick;
+            document.getElementById('prof-email').innerText = u.email;
+            document.getElementById('head-avatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.avatar}`;
+            document.getElementById('prof-avatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.avatar}`;
+            
+            document.getElementById('stat-joined').innerText = u.matches || 0;
+            document.getElementById('stat-kd').innerText = u.kd || "0.0";
+            document.getElementById('stat-wr').innerText = u.winRate || "0%";
+            
+            const r = getRank(u.bal);
+            const rEl = document.getElementById('rank-badge');
+            rEl.innerText = r;
+            rEl.className = 'rank-tag ' + (
+                r.includes('Iron') || r.includes('Trainee') ? 'rank-iron' :
+                r.includes('Bronze') || r.includes('Recruit') ? 'rank-bronze' :
+                r.includes('Silver') || r.includes('Soldier') ? 'rank-silver' :
+                r.includes('Gold') || r.includes('Captain') ? 'rank-gold' :
+                r.includes('Plat') || r.includes('Major') ? 'rank-plat' :
+                r.includes('Dia') || r.includes('General') ? 'rank-dia' : 'rank-god'
+            );
+            
+            document.getElementById('lvl-calc').innerText = Math.floor(u.bal / 500) + 1;
+
+            const topUsers = [...USERS].sort((a,b) => b.bal - a.bal).slice(0,5);
+            document.getElementById('leaderboard-list').innerHTML = topUsers.map((user, i) => {
+                let medal = i===0?'🥇':(i===1?'🥈':(i===2?'🥉':''));
+                let color = i===0?'text-yellow-400':(i===1?'text-gray-300':(i===2?'text-orange-400':'text-gray-500'));
+                return `
+                <div onclick="openInspector('${user.email}')" class="flex justify-between items-center text-[10px] bg-black/40 p-3 rounded-lg border border-white/5 hover:bg-white/5 transition mb-1 cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <span class="${color} font-black font-mono w-4">${i+1}</span>
+                        <div class="flex flex-col">
+                            <span class="text-white font-bold">${medal} ${user.nick}</span>
+                            <span class="text-[8px] text-gray-500">${getRank(user.bal)}</span>
+                        </div>
+                    </div>
+                    <span class="text-green-500 font-mono font-bold">₹${user.bal}</span>
+                </div>
+            `}).join('');
+
+            const canClaim = !u.lastBonus || (Date.now() - u.lastBonus > 86400000);
+            const dBtn = document.getElementById('btn-daily');
+            dBtn.innerText = canClaim ? "CLAIM ₹10 SUPPLY" : "RESUPPLYING...";
+            dBtn.disabled = !canClaim;
+            if(!canClaim) { dBtn.classList.add('opacity-50', 'cursor-not-allowed'); dBtn.classList.remove('animate-pulse'); }
+            else { dBtn.classList.remove('opacity-50', 'cursor-not-allowed'); dBtn.classList.add('animate-pulse'); }
+
+            const inv = u.inventory || [];
+            document.getElementById('my-inventory').innerHTML = inv.length > 0 ? inv.map(id => {
+                const item = BLACK_MARKET_ITEMS.find(i => i.id === id);
+                return `
+                    <div class="bg-black/50 p-2 rounded border border-gray-800 flex flex-col items-center justify-center text-center group hover:border-white/20">
+                        <i class="fa ${item.img} text-xl mb-1 text-gray-400 group-hover:text-cyber transition"></i>
+                        <p class="text-[7px] text-gray-300 truncate w-full">${item.name}</p>
+                    </div>
+                `;
+            }).join('') : '<p class="col-span-4 text-center text-[9px] text-gray-600 italic">VAULT EMPTY</p>';
+
+            document.getElementById('list-matches').innerHTML = MATCHES.map(m => {
+                // Ensure players array exists
+                if(!m.players) m.players = [];
+                const joined = m.players.some(p => p.email === SESSION.email);
+                const full = m.players.length >= m.slots;
+                const perc = (m.players.length / m.slots) * 100;
+                
+                return `
+                <div class="glass p-0 rounded-[20px] border border-gray-800 relative overflow-hidden group hover:border-red-500/50 transition duration-500">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-red-600 to-transparent"></div>
+                    <div class="absolute top-0 left-0 h-[2px] bg-red-600 transition-all duration-1000 z-10 shadow-[0_0_10px_red]" style="width:${perc}%"></div>
+                    
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="text-[8px] text-gray-500 font-mono border border-gray-800 px-1 rounded bg-black">OP ID: ${m.id.toString().slice(-6)}</span>
+                                <h3 class="font-game text-xl text-white italic mt-1 group-hover:text-red-500 transition">${m.title}</h3>
+                            </div>
+                            <div class="text-right">
+                                 <p class="text-[10px] font-black text-gray-300 bg-gray-900 px-2 py-1 rounded"><i class="fa fa-clock mr-1 text-red-500"></i>${m.time}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-2 mb-4">
+                            <div class="bg-black/40 p-2 rounded text-center border border-white/5">
+                                <p class="text-[7px] text-gray-500 uppercase">Prize Pool</p>
+                                <p class="font-bold text-sm text-yellow-500">₹${m.win}</p>
+                            </div>
+                            <div class="bg-red-900/10 p-2 rounded text-center border border-red-500/20">
+                                <p class="text-[7px] text-red-400 uppercase">Per Kill</p>
+                                <p class="font-bold text-sm text-red-500">₹${m.kill}</p>
+                            </div>
+                            <div class="bg-black/40 p-2 rounded text-center border border-white/5">
+                                <p class="text-[7px] text-gray-500 uppercase">Entry</p>
+                                <p class="font-bold text-sm text-white">₹${m.entry}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="text-[9px] font-mono text-gray-400">
+                                <span class="${full?'text-red-500':'text-green-500'} font-bold">${m.players.length}/${m.slots}</span> OPERATIVES
+                            </div>
+                            <button onclick="openJoin(${m.id})" ${joined || full ? 'disabled' : ''} class="btn-titan text-[9px] py-2 w-auto px-6" style="${joined?'background:#111; color:#555; box-shadow:none':''}">
+                                ${joined ? 'ENLISTED' : (full ? 'FULL' : 'DEPLOY')}
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('') || '<div class="text-center py-20 opacity-30 font-game text-xl animate-pulse">NO ACTIVE SIGNALS</div>';
+
+            const myTx = TX_LOGS.filter(t => t.email === SESSION.email);
+            document.getElementById('tx-history').innerHTML = myTx.map(t => `
+                <div class="flex justify-between items-center text-[10px] border-b border-gray-800 pb-2 hover:bg-white/5 p-1 rounded transition">
+                    <div><p class="text-gray-300 font-bold font-mono">${t.desc}</p><p class="text-gray-600 text-[8px]">${t.time}</p></div>
+                    <span class="${t.type==='c'?'text-green-500':'text-red-500'} font-mono font-bold text-xs">${t.type==='c'?'+':'-'}₹${t.amt}</span>
+                </div>
+            `).join('') || '<p class="text-center text-[9px] text-gray-600">VOID</p>';
+
+            renderMyMatches();
+        }
+
+        function renderMyMatches() {
+            const myMatches = MATCHES.filter(m => m.players && m.players.some(p => p.email === SESSION.email));
+            const container = document.getElementById('my-deployments');
+            
+            if (myMatches.length === 0) {
+                container.innerHTML = `<div class="text-center py-4 border border-dashed border-gray-800 rounded opacity-50"><p class="text-[9px] text-gray-500">NO ACTIVE DEPLOYMENTS</p></div>`;
+                return;
+            }
+
+            container.innerHTML = myMatches.map(m => {
+                const hasCreds = m.roomId && m.roomId !== "";
+                return `
+                <div class="bg-black/40 border border-gray-800 rounded-xl p-3 relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="font-game text-sm text-gray-200">${m.title}</h4>
+                        <span class="text-[9px] bg-red-900/20 text-red-500 px-2 rounded border border-red-500/20">${m.time}</span>
+                    </div>
+                    
+                    ${hasCreds ? `
+                    <div class="bg-green-900/10 border border-green-500/30 p-2 rounded text-center animate-pulse">
+                        <p class="text-[8px] text-green-500 font-bold uppercase mb-1">Access Granted</p>
+                        <div class="flex justify-around text-[10px] font-mono text-white">
+                            <span>ID: <b class="select-all">${m.roomId}</b></span>
+                            <span>PASS: <b class="select-all">${m.roomPass}</b></span>
+                        </div>
+                    </div>
+                    ` : `
+                    <div class="bg-yellow-900/10 border border-yellow-500/20 p-2 rounded text-center">
+                        <p class="text-[8px] text-yellow-600 font-mono uppercase animate-pulse">Awaiting Intel...</p>
+                    </div>
+                    `}
+                </div>
+                `;
+            }).join('');
+        }
+
+        function openInspector(email) {
+            playSfx('click');
+            const user = USERS.find(u => u.email === email);
+            if(!user) return notify("AGENT NOT FOUND", "error");
+            
+            CURRENT_INSPECT_EMAIL = email;
+            document.getElementById('insp-avatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.avatar}`;
+            document.getElementById('insp-nick').innerText = user.nick;
+            
+            // ALLOW STAFF AND ADMIN TO VIEW DETAILS
+            if (SESSION.email === ADMIN_E || STAFF_PANEL.includes(SESSION.email)) {
+                document.getElementById('insp-email').innerText = user.email;
+                document.getElementById('adm-stat-edit').classList.remove('hidden');
+                document.getElementById('adm-kd-in').value = user.kd || "0.0";
+                document.getElementById('adm-wr-in').value = user.winRate || "0%";
+            } else {
+                document.getElementById('insp-email').innerText = "******@***.***";
+                document.getElementById('adm-stat-edit').classList.add('hidden');
+            }
+            
+            document.getElementById('insp-bal').innerText = "₹" + user.bal;
+            
+            const r = getRank(user.bal);
+            const rEl = document.getElementById('insp-rank');
+            rEl.innerText = r;
+            rEl.className = 'rank-tag ' + (
+                r.includes('Iron') || r.includes('Trainee') ? 'rank-iron' :
+                r.includes('Bronze') || r.includes('Recruit') ? 'rank-bronze' :
+                r.includes('Silver') || r.includes('Soldier') ? 'rank-silver' :
+                r.includes('Gold') || r.includes('Captain') ? 'rank-gold' :
+                r.includes('Plat') || r.includes('Major') ? 'rank-plat' :
+                r.includes('Dia') || r.includes('General') ? 'rank-dia' : 'rank-god'
+            );
+            
+            // STAFF CANNOT DELETE - STRICT ADMIN ONLY
+            if(SESSION.email === ADMIN_E) {
+                document.getElementById('adm-del-btn-wrap').classList.remove('hidden');
+            } else {
+                document.getElementById('adm-del-btn-wrap').classList.add('hidden');
+            }
+            
+            document.getElementById('modal-user').classList.remove('hidden');
+        }
+
+        function saveStats() {
+            if (SESSION.email !== ADMIN_E && !STAFF_PANEL.includes(SESSION.email)) return;
+            const idx = USERS.findIndex(u => u.email === CURRENT_INSPECT_EMAIL);
+            if (idx > -1) {
+                const k = document.getElementById('adm-kd-in').value;
+                const w = document.getElementById('adm-wr-in').value;
+                USERS[idx].kd = k;
+                USERS[idx].winRate = w;
+                save();
+                notify("STATS OVERWRITTEN", "success");
+                document.getElementById('modal-user').classList.add('hidden');
+            }
+        }
+
+        function deleteTargetUser() {
+            if(!CURRENT_INSPECT_EMAIL) return;
+            if(CURRENT_INSPECT_EMAIL === ADMIN_E) return notify("CANNOT DELETE SYSTEM ROOT", "error");
+            
+            // DOUBLE CHECK: IF USER IS NOT ADMIN, STOP
+            if(SESSION.email !== ADMIN_E) return notify("ACCESS DENIED: ADMIN ONLY", "error");
+
+            const idx = USERS.findIndex(u => u.email === CURRENT_INSPECT_EMAIL);
+            if(idx > -1) {
+                const deletedName = USERS[idx].nick;
+                USERS.splice(idx, 1);
+                save();
+                notify(`${deletedName} TERMINATED`, "success");
+                document.getElementById('modal-user').classList.add('hidden');
+                sync();
+            }
+        }
+
+        /* BLACK MARKET LOGIC */
+        function renderStore() {
+            document.getElementById('store-grid').innerHTML = BLACK_MARKET_ITEMS.map(item => {
+                const owned = (SESSION.inventory || []).includes(item.id);
+                return `
+                <div class="store-card p-3 rounded-lg flex flex-col justify-between relative overflow-hidden rarity-${item.rarity}">
+                    ${owned ? '<div class="absolute top-0 right-0 bg-green-500 text-black text-[8px] px-2 font-bold">OWNED</div>' : ''}
+                    <div class="text-center py-4">
+                        <i class="fa ${item.img} text-3xl mb-3 text-gray-300 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"></i>
+                        <h4 class="font-game text-xs text-white uppercase">${item.name}</h4>
+                        <p class="text-[8px] text-gray-500 mt-1 leading-tight">${item.desc}</p>
+                    </div>
+                    <button onclick="buyItem(${item.id})" ${owned ? 'disabled' : ''} class="w-full bg-gray-900 border border-gray-700 py-2 rounded text-[10px] font-bold uppercase hover:bg-gray-800 transition flex justify-center items-center gap-1 group">
+                        ${owned ? 'ACQUIRED' : `<span class="text-yellow-500">₹${item.price}</span> <span class="group-hover:text-white transition">BUY</span>`}
+                    </button>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function buyItem(id) {
+            let uIdx = USERS.findIndex(u => u.email === SESSION.email);
+            let u = USERS[uIdx];
+            const item = BLACK_MARKET_ITEMS.find(i => i.id === id);
+            
+            if(u.bal < item.price) return notify("INSUFFICIENT FUNDS", "error");
+            if(!u.inventory) u.inventory = [];
+            if(u.inventory.includes(id)) return notify("ALREADY OWNED", "error");
+
+            u.bal -= item.price;
+            u.inventory.push(id);
+            SESSION = u;
+            logTx(u.email, `STORE: ${item.name}`, item.price, 'd');
+            save(); sync(); renderStore(); 
+            notify("ITEM ACQUIRED", "success"); playSfx('buy');
+        }
+
+        /* ACTIONS */
+        function toggleSound() {
+            MUTE = !MUTE;
+            const btn = document.getElementById('btn-sound');
+            btn.innerText = MUTE ? "SILENT" : "ENGAGED";
+            btn.className = MUTE ? "bg-gray-700 text-gray-400 px-3 py-1 rounded text-[9px] font-bold" : "bg-red-600 text-white px-3 py-1 rounded text-[9px] font-bold shadow-[0_0_10px_rgba(255,0,60,0.5)]";
+            playSfx('click');
+        }
+
+        function claimDaily() {
+            let uIdx = USERS.findIndex(u => u.email === SESSION.email);
+            let u = USERS[uIdx];
+            if(u.lastBonus && (Date.now() - u.lastBonus < 86400000)) return notify("CD ACTIVE", "error");
+            
+            u.bal += 10;
+            u.lastBonus = Date.now();
+            SESSION = u;
+            logTx(u.email, "DAILY SUPPLY DROP", 10, 'c');
+            save(); sync(); notify("SUPPLIES SECURED", "success"); playSfx('coin');
+        }
+
+        function nav(p) {
+            playSfx('hover');
+            document.querySelectorAll('.page-content').forEach(x => x.classList.add('hidden'));
+            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('nav-active'));
+            document.getElementById('pg-'+p).classList.remove('hidden');
+            document.getElementById('n-'+p).classList.add('nav-active');
+            if(p === 'admin') renderAdmin();
+            if(p === 'store') renderStore();
+        }
+        function openTab(t) { 
+            playSfx('click');
+            document.getElementById('box-dep').classList.toggle('hidden', t!=='dep'); 
+            document.getElementById('box-wit').classList.toggle('hidden', t!=='wit'); 
+        }
+        
+        function copyUPI() { navigator.clipboard.writeText('karnngrewal@okicici'); notify("COORDINATES COPIED", "success"); }
+        function setAvatar(s) { 
+            let uIdx = USERS.findIndex(u => u.email === SESSION.email);
+            if(uIdx !== -1) { USERS[uIdx].bal += 0; USERS[uIdx].avatar = s; SESSION.avatar = s; save(); sync(); notify("VISUAL ID UPDATED", "success"); }
+        }
+
+        function reqDep() {
+            playSfx('click');
+            const a = parseInt(document.getElementById('dep-amt').value);
+            const u = document.getElementById('dep-utr').value;
+            if(!a || !u) return notify("INVALID PARAMETERS", "error");
+            DEPOSITS.push({ id: Date.now(), email: SESSION.email, nick: SESSION.nick, amt: a, utr: u });
+            save(); notify("UPLINK ESTABLISHED - VERIFYING", "success"); nav('home');
+        }
+
+        function reqWit() {
+            playSfx('click');
+            const a = parseInt(document.getElementById('wit-amt').value);
+            const upi = document.getElementById('wit-upi').value;
+            const u = USERS.find(x => x.email === SESSION.email);
+            if(a < 30) return notify("MINIMUM TRANSFER ₹30", "error");
+            if(u.bal < a) return notify("INSUFFICIENT FUNDS", "error");
+            WITHDRAWS.push({ id: Date.now(), email: SESSION.email, nick: SESSION.nick, amt: a, upi: upi });
+            save(); notify("WITHDRAWAL SIGNAL SENT", "success"); nav('home');
+        }
+
+        function openJoin(id) { ACTIVE_M_ID = id; document.getElementById('modal-join').classList.remove('hidden');
+    prefillJoinIGN(); playSfx('click'); }
+        function closeModal() { document.getElementById('modal-join').classList.add('hidden'); playSfx('click'); }
+        
+        function confirmJoin() {
+            playSfx('click');
+            const ign = document.getElementById('ff-ign').value, uid = document.getElementById('ff-uid').value, fem = document.getElementById('ff-email').value;
+            if(!ign || !uid || !fem) return notify("INCOMPLETE INTEL", "error");
+            let m = MATCHES.find(x => x.id === ACTIVE_M_ID);
+            let uIdx = USERS.findIndex(x => x.email === SESSION.email);
+            
+            if(m.players.some(p => p.email === SESSION.email)) return notify("ALREADY DEPLOYED", "error");
+            if(USERS[uIdx].bal < m.entry) return notify("INSUFFICIENT CREDITS", "error");
+            
+            USERS[uIdx].bal -= m.entry;
+            USERS[uIdx].matches = (USERS[uIdx].matches || 0) + 1; 
+            m.players.push({ email: SESSION.email, targetEmail: fem, ign, uid });
+            logTx(SESSION.email, `DEPLOY: ${m.title}`, m.entry, 'd');
+            save(); closeModal(); sync(); notify("DEPLOYMENT CONFIRMED", "success");
+        }
+        
+        function logout() { 
+            localStorage.removeItem(KEY+'_S'); 
+            location.reload(); 
+        }
+
+        /* ADMIN GOD MODE */
+        function createM() {
+            const m = {
+                id: Date.now(), title: document.getElementById('adm-n').value,
+                time: document.getElementById('adm-t').value, entry: parseInt(document.getElementById('adm-f').value),
+                win: parseInt(document.getElementById('adm-w').value), kill: parseInt(document.getElementById('adm-k').value),
+                slots: parseInt(document.getElementById('adm-s').value), players: [], roomId: '', roomPass: ''
+            };
+            if(!m.title) return notify("DATA CORRUPT", "error");
+            MATCHES.unshift(m); save(); notify("MISSION BROADCASTED", "success"); renderAdmin();
+        }
+
+        function distributePrize() {
+            const n = document.getElementById('dist-name').value.trim(); 
+            const a = parseInt(document.getElementById('dist-amt').value);
+            let uIdx = USERS.findIndex(x => x.nick === n);
+            
+            if(uIdx === -1) return notify("AGENT NOT FOUND", "error");
+            
+            USERS[uIdx].bal += a;
+            logTx(USERS[uIdx].email, "MISSION REWARD", a, 'c');
+            save(); notify(`CREDITS SENT TO ${n}`, "success");
+        }
+
+        function renderAdmin() {
+            const isStaff = STAFF_PANEL.includes(SESSION.email);
+
+            document.getElementById('adm-stat-u').innerText = USERS.length;
+            document.getElementById('adm-stat-d').innerText = DEPOSITS.length;
+            
+            // HIDE REWARD & FINANCE FOR STAFF
+            document.getElementById('panel-reward').style.display = isStaff ? 'none' : 'block';
+            document.getElementById('panel-finance').style.display = isStaff ? 'none' : 'block';
+
+            const reqs = [...DEPOSITS.map(d => ({...d, type:'dep'})), ...WITHDRAWS.map(w => ({...w, type:'wit'}))];
+            document.getElementById('adm-fin-feed').innerHTML = reqs.map(r => `
+                <div class="glass p-3 rounded-xl border-l-4 ${r.type=='dep'?'border-green-500':'border-red-500'} flex justify-between items-center text-[10px] mb-2">
+                    <div><b class="text-white text-xs">${r.nick}</b><br><span class="text-gray-400 font-mono">${r.type=='dep'?'UTR: '+r.utr:'UPI: '+r.upi}</span><br><span class="text-xs font-bold text-white">₹${r.amt}</span></div>
+                    <div class="flex gap-2">
+                        <button onclick="admFin('${r.type}', ${r.id}, 'acc')" class="bg-green-600/20 text-green-500 border border-green-600 p-2 rounded hover:bg-green-600 hover:text-white transition"><i class="fa fa-check"></i></button>
+                        <button onclick="admFin('${r.type}', ${r.id}, 'rej')" class="bg-red-600/20 text-red-500 border border-red-600 p-2 rounded hover:bg-red-600 hover:text-white transition"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>`).join('') || '<p class="text-center opacity-20 text-[9px] font-mono">SILENCE IN COMMS</p>';
+
+            document.getElementById('adm-ops-feed').innerHTML = MATCHES.map(m => `
+                <div class="glass p-4 rounded-xl border border-white/5 relative mb-3">
+                    <div class="flex justify-between mb-3">
+                        <p class="font-bold text-[10px] text-blue-400 font-game">${m.title}</p>
+                        <i class="fa fa-trash text-red-500 cursor-pointer hover:scale-125 transition" onclick="delMatch(${m.id})"></i>
+                    </div>
+                    <div class="flex gap-2 mb-3">
+                        <input id="ri-${m.id}" placeholder="ROOM ID" value="${m.roomId}" class="input-titan p-2 text-[10px] h-8">
+                        <input id="rp-${m.id}" placeholder="PASS" value="${m.roomPass}" class="input-titan p-2 text-[10px] h-8">
+                        <button onclick="updateRoom(${m.id})" class="bg-blue-600 text-white rounded px-3 text-[10px] shadow-[0_0_10px_blue]"><i class="fa fa-satellite-dish"></i></button>
+                    </div>
+                    <div class="bg-black/50 p-2 rounded max-h-20 overflow-y-auto border border-white/5">
+                         ${(m.players || []).map(p => `<p class="text-[8px] text-gray-400 border-b border-gray-800 flex justify-between py-1"><span>${p.ign}</span><span class="text-red-500 font-mono">${p.uid}</span></p>`).join('')}
+                    </div>
+                </div>`).join('');
+        }
+
+        function admFin(type, id, act) {
+            if(STAFF_PANEL.includes(SESSION.email)) return notify("ACCESS DENIED", "error"); // Extra safety
+            load();
+            if(type === 'dep') {
+                if(act === 'acc') {
+                    const d = DEPOSITS.find(x => x.id === id);
+                    let uIdx = USERS.findIndex(u => u.email === d.email);
+                    if(uIdx !== -1) { USERS[uIdx].bal += d.amt; logTx(d.email, "DEPOSIT APPROVED", d.amt, 'c'); }
+                }
+                DEPOSITS = DEPOSITS.filter(x => x.id !== id);
+            } else {
+                const w = WITHDRAWS.find(x => x.id === id);
+                if(act === 'acc') {
+                     let uIdx = USERS.findIndex(u => u.email === w.email);
+                     if(uIdx !== -1 && USERS[uIdx].bal >= w.amt) { USERS[uIdx].bal -= w.amt; logTx(w.email, "WITHDRAWAL PAID", w.amt, 'd'); }
+                }
+                WITHDRAWS = WITHDRAWS.filter(x => x.id !== id);
+            }
+            save(); renderAdmin();
+        }
+
+        function updateRoom(id) {
+            const m = MATCHES.find(x => x.id === id);
+            m.roomId = document.getElementById('ri-'+id).value;
+            m.roomPass = document.getElementById('rp-'+id).value;
+            save(); notify("INTEL SYNCED", "success");
+        }
+        function delMatch(id) { if(confirm("ABORT MISSION?")) { MATCHES = MATCHES.filter(x => x.id !== id); save(); renderAdmin(); } }
+    
+function prefillJoinIGN(){
+    const ign=document.getElementById('ff-ign');
+    if(ign && SESSION && SESSION.nick){
+        ign.value=SESSION.nick;
+    }
+}
+
+</script>
+</body>
+</html>
